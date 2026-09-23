@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.kedu.dto.StudentDTO;
 
 @Repository
 public class StudentDAO {
@@ -18,14 +21,16 @@ public class StudentDAO {
 	 
 	   public void insert(StudentDTO dto) throws Exception {
 		   
-		  String sql = "insert into student values(student_seq.nextval,?, ?";
+		  String sql = "insert into student values(student_seq.nextval,?, ?,?,?)";
 		   
 		  try(Connection con = dbcp.getConnection();
 			  PreparedStatement stat = con.prepareStatement(sql)) {
 			  
-			   stat.setString(1, dto.getname());
-			   stat.setString(1, dto.getcontact());
-			   stat.setInt(1, dto.getId());
+			   stat.setString(1, dto.getName());
+			   stat.setInt(2, dto.getKor());
+			   stat.setInt(3, dto.getEng());
+			   stat.setInt(4, dto.getMath());
+			
 			   
 			   stat.executeUpdate();
 			   
@@ -35,11 +40,11 @@ public class StudentDAO {
 	   
 	   
 	   
-	   public ArryaList<StudentDTO> selectAll() throws Exception {
+	   public List<StudentDTO> selectAll() throws Exception {
 		   
 		   String sql = "select * from student";
 		   
-		   ArrayList<StudentDTO> list = new ArrayList<>();
+		        List<StudentDTO> list = new ArrayList<>();
 		   
 		   try(Connection con = dbcp.getConnection();
 			  PreparedStatement stat = con.prepareStatement(sql)) {
@@ -50,9 +55,11 @@ public class StudentDAO {
 				   
 				   int id = rs.getInt(1);
 				   String name = rs.getString(2);
-				   String contact = rs.getString(3);
+				   int kor = rs.getInt(3);
+				   int eng = rs.getInt(4);
+				   int math = rs.getInt(5);
 				   
-				   StudentDTO dto = new Student(id, name, contact);
+				   StudentDTO dto = new StudentDTO(id, name, kor, eng, math);
 				   list.add(dto);
 				   
 			   }
@@ -64,16 +71,18 @@ public class StudentDAO {
 	   }
 	   
 	   
-	   public void update(int id, String name, String contact) throws Exception {
+	   public void update(int id, String name, int kor, int eng, int math) throws Exception {
 		   
-		   String sql = "update student set name = ?, contact = ?, where id = ?";
+		   String sql = "update student set name = ?, kor = ?, eng = ?, math = ? where id = ?";
 		   
 		   try(Connection con = dbcp.getConnection();
 			  PreparedStatement stat = con.prepareStatement(sql)) {
 			   
 			   stat.setString(1, name);
-			   stat.setString(2, contact);
-			   stat.setInt(3, id);
+			   stat.setInt(2, kor);
+			   stat.setInt(3, eng);
+			   stat.setInt(4, math);
+			   stat.setInt(5, id);
 			   
 			   stat.executeUpdate();
 			   
