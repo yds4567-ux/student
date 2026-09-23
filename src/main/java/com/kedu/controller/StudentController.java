@@ -1,7 +1,11 @@
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.kedu.dto.StudentDTO;
 
 @Controller
 @RequestMapping("/student")
@@ -29,11 +33,11 @@ public class StudentController {
 	public String list(Model model) throws Exception{
 		
 		
-		list<StudentDTO> lists = dao.list();
+		List<StudentDTO> lists = dao.list();
 		
 		model.addAttribute("lists", lists);
 		
-		return "student"; 
+		return "list"; 
 	}
 	
 	@RequestMapping("/delete")
